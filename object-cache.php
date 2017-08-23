@@ -141,7 +141,7 @@ class WP_Object_Cache {
 			$expire = $this->default_expiration;
 		}
 
-		$result = $mc->add( $key, $data, false, $expire );
+		$result = $mc->add( $key, $data );
 
 		if ( false !== $result ) {
 			++$this->stats['add'];
@@ -540,7 +540,7 @@ class WP_Object_Cache {
 		}
 
 		foreach ( $buckets as $bucket => $servers ) {
-			$this->mc[ $bucket ] = new Memcache();
+			$this->mc[ $bucket ] = new Memcached();
 
 			foreach ( $servers as $server  ) {
 				if ( 'unix://' == substr( $server, 0, 7 ) ) {
@@ -560,8 +560,7 @@ class WP_Object_Cache {
 					}
 				}
 
-				$this->mc[ $bucket ]->addServer( $node, $port, true, 1, 1, 15, true, array( $this, 'failure_callback' ) );
-				$this->mc[ $bucket ]->setCompressThreshold( 20000, 0.2 );
+				$this->mc[ $bucket ]->addServer( $node, $port, true );
 			}
 		}
 
